@@ -16,20 +16,34 @@ public class Player : MonoBehaviour
 
     private IInputHandler input;
     private JumpPhysics jumpPhysics;
+    private GameStateMachine gameStateMachine;
+    private StateGame stateGame;
 
     public event Action OnDeath;
 
     [Inject]
-    private void Construct(IInputHandler input, JumpPhysics jumpPhysics)
+    private void Construct(IInputHandler input, JumpPhysics jumpPhysics, GameStateMachine gameStateMachine, StateGame stateGame)
     {
         this.input = input;
         this.jumpPhysics = jumpPhysics;
+        this.gameStateMachine = gameStateMachine;
+        this.stateGame = stateGame;
+    }
+
+    private void Start()
+    {
+        gameStateMachine.Initialize(new StatePause());
     }
 
     private void Update()
     {
         jumpInput = input.GetInput(JUMP_BUTTON);
         jumpInput = input.GetInput(ALT_JUMP_BUTTON);
+        if (gameStateMachine.CurrentState is StatePause && jumpInput > 0)
+        {
+            gameStateMachine.ChangeState(stateGame);
+        }
+        print(jumpInput);
         jumpPhysics.DoJump(playerRigidbody, jumpInput, jumpForce);
     }
 
