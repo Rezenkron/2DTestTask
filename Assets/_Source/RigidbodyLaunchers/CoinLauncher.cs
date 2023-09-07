@@ -3,7 +3,7 @@ using UnityEngine;
 
 public class CoinLauncher : ARigidbodyLauncher
 {
-    [SerializeField] float minY, maxY; 
+    [SerializeField] private float minY, maxY; 
     private void Start()
     {
         StartCoroutine(LaunchBody());
