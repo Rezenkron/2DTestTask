@@ -4,10 +4,6 @@ using UnityEngine;
 public class CoinLauncher : ARigidbodyLauncher
 {
     [SerializeField] private float minY, maxY; 
-    private void Start()
-    {
-        StartCoroutine(LaunchBody());
-    }
 
     protected override IEnumerator LaunchBody()
     {

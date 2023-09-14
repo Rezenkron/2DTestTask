@@ -1,5 +1,6 @@
 using System.Collections;
 using UnityEngine;
+using Zenject;
 
 public abstract class ARigidbodyLauncher : MonoBehaviour 
 {
@@ -7,9 +8,18 @@ public abstract class ARigidbodyLauncher : MonoBehaviour
     [SerializeField] protected float spawnDelay;
     [SerializeField] protected float launchForce;
     protected abstract IEnumerator LaunchBody();
-
+    public void StartLaunch()
+    {
+        StartCoroutine(LaunchBody());
+    }
 
     protected Player player;
+
+    [Inject]
+    private void Construct(Player player)
+    {
+        this.player = player;
+    }
 
     private void OnEnable()
     {
@@ -19,11 +29,6 @@ public abstract class ARigidbodyLauncher : MonoBehaviour
     private void OnDisable()
     {
         player.OnDeath -= OnPlayerDeath;
-    }
-
-    private void Awake()
-    {
-        player = FindObjectOfType<Player>();
     }
 
     private void OnPlayerDeath()

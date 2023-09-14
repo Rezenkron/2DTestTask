@@ -5,11 +5,6 @@ public class EnemyLauncher : ARigidbodyLauncher
 {
     private Vector3 direction;
 
-    private void Start()
-    {
-        StartCoroutine(LaunchBody());
-    }
-
     private void Update()
     {
         direction = player.transform.position - transform.position;

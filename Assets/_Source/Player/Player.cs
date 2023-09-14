@@ -1,3 +1,4 @@
+using JetBrains.Annotations;
 using System;
 using UnityEngine;
 using UnityEngine.SceneManagement;
@@ -5,54 +6,55 @@ using Zenject;
 
 public class Player : MonoBehaviour
 {
-    [SerializeField] private string deathTag;
-    [SerializeField] private Rigidbody2D playerRigidbody;
+    [SerializeField] private Rigidbody2D rb;
     [SerializeField] private float jumpForce;
-
-    private const string JUMP_BUTTON = "Jump";
-    private const string ALT_JUMP_BUTTON = "Fire1";
-
-    private float jumpInput;
-
-    private IInputHandler input;
-    private JumpPhysics jumpPhysics;
-    private GameStateMachine gameStateMachine;
-    private StateGame stateGame;
+    [SerializeField] private LayerMask deathLayer;
+    [SerializeField] private float standardGravityScale;
+    [SerializeField] private ParticleSystem trail;
 
     public event Action OnDeath;
+    
+    private IInputHandler inputHandler;
 
     [Inject]
-    private void Construct(IInputHandler input, JumpPhysics jumpPhysics, GameStateMachine gameStateMachine, StateGame stateGame)
+    private void Construct(IInputHandler inputHandler)
     {
-        this.input = input;
-        this.jumpPhysics = jumpPhysics;
-        this.gameStateMachine = gameStateMachine;
-        this.stateGame = stateGame;
+        this.inputHandler = inputHandler;
     }
 
-    private void Start()
+    public void Prepare()
     {
-        gameStateMachine.Initialize(new StatePause());
+        rb.gravityScale = 0;
+        trail.Stop();
     }
 
-    private void Update()
+    public void Activate()
     {
-        jumpInput = input.GetInput(JUMP_BUTTON);
-        jumpInput = input.GetInput(ALT_JUMP_BUTTON);
-        if (gameStateMachine.CurrentState is StatePause && jumpInput > 0)
-        {
-            gameStateMachine.ChangeState(stateGame);
-        }
-        print(jumpInput);
-        jumpPhysics.DoJump(playerRigidbody, jumpInput, jumpForce);
+        rb.gravityScale = standardGravityScale;
+        trail.Play();
+    }
+
+    private void OnEnable()
+    {
+        inputHandler.OnInputHold += JumpPhysics;
+    }
+
+    private void OnDisable()
+    {
+        inputHandler.OnInputHold -= JumpPhysics;
     }
 
     private void OnCollisionEnter2D(Collision2D collision)
     {
-        if (collision.gameObject.tag == deathTag)
+        if ((deathLayer.value & (1 << collision.gameObject.layer)) > 0)
         {
             Death();
         }
+    }
+
+    private void JumpPhysics()
+    {
+        rb.velocity = new Vector2(0, jumpForce);
     }
 
     private void Death()

@@ -163,9 +163,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 171b20b8ca205054eb856ff23e957f7e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  deathTag: Death
-  playerRigidbody: {fileID: 1136463979084443558}
+  rb: {fileID: 1136463979084443558}
   jumpForce: 700
+  deathLayer:
+    serializedVersion: 2
+    m_Bits: 128
+  standardGravityScale: 0.5
+  trail: {fileID: 984055660333412140}
 --- !u!1 &7240987332448934927
 GameObject:
   m_ObjectHideFlags: 0
@@ -211,7 +215,7 @@ PointEffector2D:
   m_ColliderMask:
     serializedVersion: 2
     m_Bits: 64
-  m_ForceMagnitude: -10
+  m_ForceMagnitude: -100
   m_ForceVariation: 0
   m_DistanceScale: 1
   m_ForceSource: 0
@@ -323,6 +327,11 @@ PrefabInstance:
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: dc709697b86a08545a1e8b8d4a6db25d, type: 3}
+--- !u!198 &984055660333412140 stripped
+ParticleSystem:
+  m_CorrespondingSourceObject: {fileID: 803003452484806454, guid: dc709697b86a08545a1e8b8d4a6db25d, type: 3}
+  m_PrefabInstance: {fileID: 471969809293527066}
+  m_PrefabAsset: {fileID: 0}
 --- !u!4 &1437652039528949482 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 1549052333237432048, guid: dc709697b86a08545a1e8b8d4a6db25d, type: 3}
