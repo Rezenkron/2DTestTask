@@ -9,11 +9,16 @@ public class CoinLauncher : ARigidbodyLauncher
     {
         while (true)
         {
-            yield return new WaitForSeconds(spawnDelay);
+            yield return new WaitForSeconds(Random.Range(minSpawnDelay,maxSpawnDelay));
 
-            rb.gameObject.SetActive(true);
-            transform.position = new Vector2(transform.position.x, Random.Range(maxY, minY));
-            rb.AddForce(Vector2.left * launchForce, ForceMode2D.Impulse);
+            Rigidbody2D coin = GetPooledObject();
+            if (coin != null)
+            {
+                coin.transform.position = gameObject.transform.position;
+                coin.gameObject.SetActive(true);
+                transform.position = new Vector2(transform.position.x, Random.Range(maxY, minY));
+                coin.AddForce(Vector2.left * launchForce, ForceMode2D.Impulse);
+            }
         }
     }
 }

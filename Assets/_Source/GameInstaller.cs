@@ -3,22 +3,61 @@ using Zenject;
 
 public class GameInstaller : MonoInstaller
 {
-    [SerializeField] private Player player;
+    [SerializeField] private APlayer player;
     [SerializeField] private ARigidbodyLauncher enemyLauncher;
     [SerializeField] private ARigidbodyLauncher coinLauncher;
     public override void InstallBindings()
     {
-        Container
-            .Bind<IInputHandler>()
-            .To<KeyboardAndMouseInput>()
-            .AsSingle()
-            .NonLazy();
+        BindInputHandler();
+        BindPlayer();
+        BindStateMachine();
+        BindStates();
+        BindPools();
 
+    }
+
+    private void BindPlayer()
+    {
         Container
-            .Bind<Player>()
+            .Bind<APlayer>()
             .FromInstance(player)
             .AsSingle();
+    }
 
+    private void BindStateMachine()
+    {
+        Container
+            .Bind<IStateMachine>()
+            .To<GameStateMachine<AGameState>>()
+            .AsSingle()
+            .NonLazy();
+    }
+
+    private void BindPools()
+    {
+        Container
+            .Bind<ARigidbodyLauncher>()
+            .WithId(InjectIdData.ENEMY_LAUNCHER)
+            .FromInstance(enemyLauncher)
+            .NonLazy();
+        Container
+            .Bind<ARigidbodyLauncher>()
+            .WithId(InjectIdData.COIN_LAUNCHER)
+            .FromInstance(coinLauncher)
+            .NonLazy();
+    }
+
+    private void BindInputHandler()
+    {
+        Container
+            .Bind<IInputHandler>()
+            .To<InputHandler>()
+            .AsSingle()
+            .NonLazy();
+    }
+
+    private void BindStates()
+    {
         Container
             .Bind<AGameState>()
             .WithId(InjectIdData.PREPARE_STATE_ID)
@@ -32,25 +71,6 @@ public class GameInstaller : MonoInstaller
             .To<StateGame>()
             .AsSingle()
             .NonLazy();
-
-        Container
-            .Bind<IStateMachine>()
-            .To<GameStateMachine<AGameState>>()
-            .AsSingle()
-            .NonLazy();
-
-        Container
-            .Bind<ARigidbodyLauncher>()
-            .WithId(InjectIdData.ENEMY_LAUNCHER)
-            .FromInstance(enemyLauncher)
-            .NonLazy();
-        Container
-            .Bind<ARigidbodyLauncher>()
-            .WithId(InjectIdData.COIN_LAUNCHER)
-            .FromInstance(coinLauncher)
-            .NonLazy();
-
-
     }
 }
 

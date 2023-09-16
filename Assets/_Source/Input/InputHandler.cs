@@ -1,15 +1,14 @@
 using System;
-using UnityEngine;
 using UnityEngine.InputSystem;
 
-public class KeyboardAndMouseInput : IInputHandler
+public class InputHandler : IInputHandler
 {
     GameControls gameControls;
 
-    public event Action OnInputHold;
+    public event Action<bool> OnInputHold;
     public event Action OnInputClick;
 
-    public KeyboardAndMouseInput()
+    public InputHandler()
     {
         gameControls = new GameControls();
         gameControls.Enable();
@@ -56,11 +55,11 @@ public class KeyboardAndMouseInput : IInputHandler
 
     private void OnInputHoldStarted(InputAction.CallbackContext context)
     {
-        OnInputHold?.Invoke();
+        OnInputHold?.Invoke(true);
     }
     private void OnInputHoldCanceled(InputAction.CallbackContext context)
     {
-        OnInputHold?.Invoke();
+        OnInputHold?.Invoke(false);
     }
 
     private void OnInputClickPerformed(InputAction.CallbackContext context)

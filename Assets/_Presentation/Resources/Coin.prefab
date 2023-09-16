@@ -171,5 +171,4 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f9ce0eb0fc935f3499ac4b106894bee9, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  launcher: {fileID: 0}
-  coinValue: 1
+  coinValue: 5

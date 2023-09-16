@@ -1,5 +1,6 @@
 using System.Collections;
 using UnityEngine;
+using Zenject.SpaceFighter;
 
 public class EnemyLauncher : ARigidbodyLauncher
 {
@@ -14,10 +15,15 @@ public class EnemyLauncher : ARigidbodyLauncher
     {
         while (true)
         {
-            yield return new WaitForSeconds(spawnDelay);
+            yield return new WaitForSeconds(Random.Range(minSpawnDelay,maxSpawnDelay));
 
-            rb.gameObject.SetActive(true);
-            rb.AddForce(direction * launchForce, ForceMode2D.Impulse);
+            Rigidbody2D enemy = GetPooledObject();
+            if(enemy != null)
+            {
+                enemy.transform.position = gameObject.transform.position;
+                enemy.gameObject.SetActive(true);
+                enemy.AddForce(direction * launchForce, ForceMode2D.Impulse);
+            }
         }
     }
 }

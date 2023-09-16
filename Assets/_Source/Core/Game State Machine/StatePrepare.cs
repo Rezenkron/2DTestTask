@@ -3,8 +3,8 @@ using UnityEngine;
 public class StatePrepare : AGameState
 {
     private IInputHandler inputHandler;
-    private Player player;
-    public StatePrepare(IInputHandler inputHandler, Player player)
+    private APlayer player;
+    public StatePrepare(IInputHandler inputHandler, APlayer player)
     {
         this.inputHandler = inputHandler;
         this.player = player;

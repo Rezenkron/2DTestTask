@@ -1,34 +1,16 @@
-using JetBrains.Annotations;
-using System;
 using UnityEngine;
-using UnityEngine.SceneManagement;
-using Zenject;
 
-public class Player : MonoBehaviour
+public class Player : APlayer
 {
-    [SerializeField] private Rigidbody2D rb;
-    [SerializeField] private float jumpForce;
-    [SerializeField] private LayerMask deathLayer;
-    [SerializeField] private float standardGravityScale;
-    [SerializeField] private ParticleSystem trail;
+    private bool isInputActive;
 
-    public event Action OnDeath;
-    
-    private IInputHandler inputHandler;
-
-    [Inject]
-    private void Construct(IInputHandler inputHandler)
-    {
-        this.inputHandler = inputHandler;
-    }
-
-    public void Prepare()
+    public override void Prepare()
     {
         rb.gravityScale = 0;
         trail.Stop();
     }
 
-    public void Activate()
+    public override void Activate()
     {
         rb.gravityScale = standardGravityScale;
         trail.Play();
@@ -36,12 +18,12 @@ public class Player : MonoBehaviour
 
     private void OnEnable()
     {
-        inputHandler.OnInputHold += JumpPhysics;
+        inputHandler.OnInputHold += DoJump;
     }
 
     private void OnDisable()
     {
-        inputHandler.OnInputHold -= JumpPhysics;
+        inputHandler.OnInputHold -= DoJump;
     }
 
     private void OnCollisionEnter2D(Collision2D collision)
@@ -52,14 +34,16 @@ public class Player : MonoBehaviour
         }
     }
 
-    private void JumpPhysics()
+    private void Update()
     {
-        rb.velocity = new Vector2(0, jumpForce);
+        if(isInputActive)
+        {
+            rb.AddForce(Vector2.up * jumpForce * Time.fixedDeltaTime);
+        }
     }
 
-    private void Death()
+    private void DoJump(bool active)
     {
-        OnDeath?.Invoke();
-        SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
+        isInputActive = active;
     }
 }
