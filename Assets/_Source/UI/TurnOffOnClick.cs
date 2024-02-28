@@ -1,5 +1,5 @@
 using UnityEngine;
-using Zenject;
+using VContainer;
 
 public class TurnOffOnClick : MonoBehaviour
 {

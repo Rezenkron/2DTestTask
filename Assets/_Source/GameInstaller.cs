@@ -1,12 +1,16 @@
 using UnityEngine;
-using Zenject;
+using VContainer;
+using VContainer.Unity;
 
-public class GameInstaller : MonoInstaller
+public class GameInstaller : LifetimeScope
 {
     [SerializeField] private APlayer player;
     [SerializeField] private ARigidbodyLauncher enemyLauncher;
     [SerializeField] private ARigidbodyLauncher coinLauncher;
-    public override void InstallBindings()
+
+    private IContainerBuilder _builder;
+
+    protected override void Configure(IContainerBuilder builder)
     {
         BindInputHandler();
         BindPlayer();
@@ -14,63 +18,59 @@ public class GameInstaller : MonoInstaller
         BindStates();
         BindPools();
 
+        _builder = builder;
+
     }
 
     private void BindPlayer()
     {
-        Container
-            .Bind<APlayer>()
-            .FromInstance(player)
-            .AsSingle();
+        _builder.RegisterInstance(player);
     }
 
     private void BindStateMachine()
     {
-        Container
-            .Bind<IStateMachine>()
-            .To<GameStateMachine<AGameState>>()
-            .AsSingle()
-            .NonLazy();
+        _builder.Register<IStateMachine, GameStateMachine<AGameState>>(Lifetime.Singleton);
     }
 
     private void BindPools()
     {
-        Container
-            .Bind<ARigidbodyLauncher>()
-            .WithId(InjectIdData.ENEMY_LAUNCHER)
-            .FromInstance(enemyLauncher)
-            .NonLazy();
-        Container
-            .Bind<ARigidbodyLauncher>()
-            .WithId(InjectIdData.COIN_LAUNCHER)
-            .FromInstance(coinLauncher)
-            .NonLazy();
+        //Container
+        //    .Bind<ARigidbodyLauncher>()
+        //    .WithId(InjectIdData.ENEMY_LAUNCHER)
+        //    .FromInstance(enemyLauncher)
+        //    .NonLazy();
+        //Container
+        //    .Bind<ARigidbodyLauncher>()
+        //    .WithId(InjectIdData.COIN_LAUNCHER)
+        //    .FromInstance(coinLauncher)
+        //    .NonLazy();
     }
 
     private void BindInputHandler()
     {
-        Container
-            .Bind<IInputHandler>()
-            .To<InputHandler>()
-            .AsSingle()
-            .NonLazy();
+        _builder.Register<IInputHandler, InputHandler>(Lifetime.Singleton);
     }
 
     private void BindStates()
     {
-        Container
-            .Bind<AGameState>()
-            .WithId(InjectIdData.PREPARE_STATE_ID)
-            .To<StatePrepare>()
-            .AsSingle()
-            .NonLazy();
+        //Container
+        //    .Bind<AGameState>()
+        //    .WithId(InjectIdData.PREPARE_STATE_ID)
+        //    .To<StatePrepare>()
+        //    .AsSingle()
+        //    .NonLazy();
 
-        Container
-            .Bind<AGameState>()
-            .WithId(InjectIdData.GAME_STATE_ID)
-            .To<StateGame>()
-            .AsSingle()
-            .NonLazy();
+        //Container
+        //    .Bind<AGameState>()
+        //    .WithId(InjectIdData.GAME_STATE_ID)
+        //    .To<StateGame>()
+        //    .AsSingle()
+        //    .NonLazy();
+
+        //----------------------
+        //_builder.Register<AGameState>(Lifetime.Scoped).WithParameter<StatePrepare>(new StatePrepare);
+        //в доках было написано что-то вроде этого но я не разобрался( по другому не придумал как. Зенжект лучше
+        //----------------------
     }
 }
 

@@ -1,6 +1,6 @@
 using System;
 using System.Collections.Generic;
-using Zenject;
+using VContainer;
 
 public class GameStateMachine<T> : IStateMachine where T : AGameState
 {
@@ -8,7 +8,7 @@ public class GameStateMachine<T> : IStateMachine where T : AGameState
     private AGameState currentState;
 
     public GameStateMachine
-        ([Inject(Id = InjectIdData.PREPARE_STATE_ID)] T prepareState, 
+        ([Inject(Id = InjectIdData.PREPARE_STATE_ID)] T prepareState,
         [Inject(Id = InjectIdData.GAME_STATE_ID)] T gameState)
     {
         states = new Dictionary<Type, T>()

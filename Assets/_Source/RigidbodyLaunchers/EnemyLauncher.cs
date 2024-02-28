@@ -1,6 +1,6 @@
 using System.Collections;
 using UnityEngine;
-using Zenject.SpaceFighter;
+using VContainer;
 
 public class EnemyLauncher : ARigidbodyLauncher
 {
